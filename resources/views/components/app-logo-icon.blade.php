@@ -1,0 +1,1 @@
+<img src="{{asset('assets/images/todo_temp_logo.jpg')}}" alt="MyTodoApp">
