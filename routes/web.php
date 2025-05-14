@@ -1,10 +1,17 @@
 <?php
 
-use App\Livewire\Settings\Appearance;
-use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
-use Illuminate\Support\Facades\Route;
+use App\Livewire\Settings\Password;
 use Illuminate\Support\Facades\Auth;
+use App\Livewire\DashboardComponent;
+use Illuminate\Support\Facades\Route;
+use App\Livewire\Settings\Appearance;
+use App\Livewire\Tasks\EditTaskComponent;
+use App\Livewire\Tasks\ShowTaskComponent;
+use App\Livewire\Subscriptions\SubscriptionComponent;
+use App\Livewire\Notifications\NotificationComponent;
+use App\Livewire\Subscriptions\ShowSubscriptionComponent;
+use App\Livewire\Notifications\ShowNotificationComponent;
 
 Route::get('/', function () {
 
@@ -17,9 +24,34 @@ Route::get('/', function () {
     // return view('welcome');
 })->name('home');
 
-Route::view('dashboard', 'dashboard')
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/dashboard', DashboardComponent::class)->name('dashboard');
+
+    Route::prefix('/tasks')->group(function () {
+        // Route::get('/', ViewTask::class);
+        Route::prefix('/{task:uuid}')->group(function () {
+            Route::get('/', ShowTaskComponent::class);
+            Route::get('/edit', EditTaskComponent::class);
+        });
+    });
+
+    Route::prefix('/notifications')->group(function () {
+        Route::get('/', NotificationComponent::class);
+        Route::prefix('/{id}')->group(function () {
+            Route::get('/', ShowNotificationComponent::class);
+        });
+    });
+
+    Route::prefix('/subscriptions')->group(function () {
+        Route::get('/', SubscriptionComponent::class);
+        Route::prefix('/{id}')->group(function () {
+            Route::get('/', ShowSubscriptionComponent::class);
+        });
+    });
+
+});
+
+// Route::view('dashboard', 'dashboard')->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware(['auth'])->group(function () {
     Route::redirect('settings', 'settings/profile');

@@ -19,6 +19,32 @@
 
             <flux:spacer />
 
+            <flux:navbar class="me-1.5 space-x-0.5 rtl:space-x-reverse py-0!">
+                <flux:tooltip :content="__('Notifications')" position="bottom">
+                    <flux:dropdown>
+                        <flux:navbar.item 
+                            wire:poll.15s 
+                            badge="{{auth()->user()->unreadNotifications->count()}}" 
+                            class="max-lg:hidden [&>div>svg]:size-5"
+                            badge-color="yellow">                           
+                            <flux:icon.bell-alert variant="solid" class="{{ auth()->user()->unreadNotifications->count() > 0 ? 'text-amber-500 dark:text-amber-300' : null}}" />                        
+                        </flux:navbar.item>
+                        <flux:navmenu>
+                            @foreach (auth()->user()->unreadNotifications->take(5) as $notification)
+                            <flux:navmenu.item href="/notifications/{{$notification->id}}" style="max-width: 300px!important;">
+                                <div class="p-4 mb-4 text-sm text-gray-100 rounded-lg bg-green-600 dark:bg-green-800 dark:text-gray-200" role="alert">
+                                    <span class="font-medium">{{ $notification['data']['title'] }}</span> 
+                                </div>                              
+                            </flux:navmenu.item>                               
+                            @endforeach                            
+                            <flux:navmenu.item href="/notifications">View All</flux:navmenu.item>
+                        </flux:navmenu>
+                    </flux:dropdown>
+                </flux:tooltip>
+            </flux:navbar>
+
+            
+
             {{-- <flux:navbar class="me-1.5 space-x-0.5 rtl:space-x-reverse py-0!">
                 <flux:tooltip :content="__('Search')" position="bottom">
                     <flux:navbar.item class="!h-10 [&>div>svg]:size-5" icon="magnifying-glass" href="#" :label="__('Search')" />
@@ -118,6 +144,7 @@
 
         {{ $slot }}
 
+        <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
         @fluxScripts
     </body>
 </html>

@@ -23,7 +23,7 @@ And hopefully, I hope this App does it work completely.
 ### Stacks
 
 - **Backend : PHP / Laravel**
-- **Frontend : Livewire Starter Kit - Blade, Tailwind Css & Flux UI**
+- **Frontend : Livewire Starter Kit - Blade, Tailwind CSS, Flux UI & Flowbite**
 
 ## Setup Guide
 ##### Setting up your workspace offline
@@ -87,6 +87,15 @@ Basic feature of the App built with Laravel Classes includes:
     <li>Command <code>Make a new Command 'MakeServiceCommand' for handling the auto generation of Service Class</code></li>
     <li>Policies <code>This handles security of Models to ensure the right access by owners</code></li>
 </ol>
+
+
+## Challenges Encountered
+At the beginning of this project, I thought, I could use the full out of the box laravel 12 starter-kit 
+"Flux" to achieve my aim, but after hours of blocker, and trying to manipulate my way through the 
+paid version of Flux which demanded I pay $149 per single project or $299 one time. <br>
+So, I went in search of optional UI helpers I can get, and luckily I found one FlowBite, which is a bit 
+open source for some features, and paid for other, so I will try and stick with the free version of the 
+UI plugin.
 
 
 ## Code of Conduct

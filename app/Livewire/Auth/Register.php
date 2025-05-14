@@ -3,17 +3,23 @@
 namespace App\Livewire\Auth;
 
 use Illuminate\Auth\Events\Registered;
+use App\Services\SubscriptionService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Traits\AppNotificationTrait;
+use App\Enums\AppNotificationEnum;
 use Illuminate\Validation\Rules;
 use App\Enums\AccountStatusEnum;
 use Livewire\Attributes\Layout;
+use App\Enums\RoleTypeEnum;
 use Livewire\Component;
 use App\Models\User;
 
 #[Layout('components.layouts.auth')]
 class Register extends Component
 {
+    use AppNotificationTrait;
+
     public string $first_name = '';
 
     public string $last_name = '';
@@ -64,13 +70,16 @@ class Register extends Component
         $validated['password'] = Hash::make($validated['password']);
         $validated['status'] = AccountStatusEnum::ACTIVE;
         $validated['is_active'] = true;
-
-        // dd($validated);
-        // return;
+        $validated['role'] = RoleTypeEnum::USER;
 
         event(new Registered(($user = User::create($validated))));
 
+        // Add Default Subscription for User
+        $subscription = app()->make(SubscriptionService::class)->initialize($user);
+
         Auth::login($user);
+        $msg = 'Registration Successful, proceed to Verify your Email';
+        $this->notify('success', $msg, AppNotificationEnum::SUCCESS);
 
         $this->redirect(route('dashboard', absolute: false), navigate: true);
     }
