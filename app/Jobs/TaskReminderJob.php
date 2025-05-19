@@ -153,7 +153,7 @@ class TaskReminderJob implements ShouldQueue
         if($type == 'due'){ 
             $heading = "*{$this->user->full_name}* \nThis task {$singlTask} will be due in: {$startTime} minutes.\n\n";
 
-            $endUrl = "{$appUrl}/task/{$taskUuid}";
+            $endUrl = "{$appUrl}/tasks/{$taskUuid}";
             $closing = "\n\nDo have a lovely day";
 
             return $heading .$endUrl .$closing;
