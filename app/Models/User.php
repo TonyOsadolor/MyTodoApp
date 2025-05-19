@@ -4,15 +4,17 @@ namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
+use App\Traits\UUID;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, SoftDeletes;
+    use HasFactory, Notifiable, SoftDeletes, UUID;
 
     /**
      * The attributes that are not mass assignable.
@@ -49,7 +51,7 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @var array
      */
-    protected $appends = ['full_name', 'is_verified'];
+    protected $appends = ['full_name', 'is_verified', 'text_number'];
 
     /**
      * Get the full name of the user.
@@ -59,6 +61,22 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getFullNameAttribute()
     {
         return $this->first_name . ' ' . $this->last_name;
+    }
+
+    /**
+     * Get formatted phone number for texting user.
+     *
+     * @return string
+     */
+    public function getTextNumberAttribute()
+    {
+        if (empty($this->phone)) {
+            return null;
+        }
+
+        $phone = preg_replace('/[^0-9]/', '', $this->phone);
+
+        return str_starts_with($phone, '0') ? '234' . substr($phone, 1) : (str_starts_with($phone, '234') ? $phone : '234' . $phone);
     }
 
     /**
@@ -93,5 +111,21 @@ class User extends Authenticatable implements MustVerifyEmail
             return true;
         }
         return false;
+    }
+
+    /**
+     * Get the tasks for the user.
+     */
+    public function tasks(): HasMany
+    {
+        return $this->hasMany(Task::class);
+    }
+
+    /**
+     * Get the tasks for the user.
+     */
+    public function subscriptions(): HasMany
+    {
+        return $this->hasMany(Subscription::class);
     }
 }
