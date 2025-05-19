@@ -4,6 +4,14 @@
         
         <div>
             <!-- Greetings Banner Starts -->
+            <flux:callout icon="clock" color="lime" inline>
+                <flux:callout.text id="clock"></flux:callout.text>
+            </flux:callout>
+            <!-- Greetings Banner End -->
+
+            <hr style="margin: 8px auto!important; border: 0px transparent;">
+
+            <!-- Greetings Banner Starts -->
             <flux:callout icon="check-circle" variant="{{$callOutColor}}" inline>
                 <flux:callout.heading><i>{{$greetings}}</i> <h3 class="text-center">{{ auth()->user()->full_name }}</h3></flux:callout.heading>
                 <flux:callout.text>What would you like to do today?</flux:callout.text>
@@ -357,7 +365,7 @@
                                 NAME
                             </th>
                             <th scope="col" class="px-6 py-3">
-                                DESCRIPTION
+                                START TIME
                             </th>
                             <th scope="col" class="px-6 py-3">
                                 ACTION
@@ -375,7 +383,7 @@
                                     {{ optional($tableTask)->title}}
                                 </td>
                                 <td class="px-6 py-4">
-                                    {{ substr(optional($tableTask)->description, 0, 100) . (strlen(optional($tableTask)->description) > 100 ? ' ... Continued' : '')}}
+                                    {{ \Carbon\Carbon::parse(optional($tableTask)->start_date)->format('F j, Y g:i A') ?? 'No date available' }}
                                 </td>
                                 <td class="px-6 py-4">
                                     <flux:button variant="filled" cursor-pointer wire:click="dashboardViewTask({{optional($tableTask)->id}})"> View </flux:button>
@@ -397,7 +405,7 @@
     </div>
 
     <!-- Add New Task Modal Starts --> 
-    <flux:modal name="add-new-task" id="add-new-task" class="md:w-96" :dismissible="false" variant="flyout">
+    <flux:modal name="add-new-task" id="add-new-task" class="md:w-96" :dismissible="false">
         <div class="space-y-6 space-x-6">
             <div>
                 <flux:heading size="lg">Add New Task</flux:heading>
@@ -533,4 +541,36 @@
         </div>
     </flux:modal>
     <!-- Add New Task Modal Stops -->
+
+    <script>
+            function startTime() {
+                const today = new Date();
+                const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+                const months = ["January", "February", "March", "April", "May", "June",
+                                "July", "August", "September", "October", "November", "December"];
+
+                let day = days[today.getDay()];
+                let date = today.getDate();
+                let month = months[today.getMonth()];
+                let year = today.getFullYear();
+
+                let h = today.getHours();
+                let m = today.getMinutes();
+                let s = today.getSeconds();
+
+                let ampm = h >= 12 ? "PM" : "AM";
+                h = h % 12 || 12; // Convert 24-hour time to 12-hour format
+
+                m = checkTime(m);
+                s = checkTime(s);
+
+                document.getElementById("clock").innerHTML = `${day} ${date}th ${month}, ${year} ${h}:${m}:${s} ${ampm}`;
+
+                setTimeout(startTime, 1000);
+            }
+
+            function checkTime(i) {
+                return i < 10 ? "0" + i : i;  // Add leading zero if needed
+            }
+        </script>
 </div>

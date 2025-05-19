@@ -33,7 +33,6 @@
                     <flux:spacer />
 
                     <flux:button type="submit" variant="primary">ADD</flux:button>
-                    <flux:text class="mt-2" wire:loading><i>Add Subscription....</i></flux:text>
                 </div>
             </div>
         </form>
