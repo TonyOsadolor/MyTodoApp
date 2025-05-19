@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Livewire\DashboardComponent;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Settings\Appearance;
+use App\Livewire\Tasks\TaskComponent;
 use App\Livewire\Tasks\EditTaskComponent;
 use App\Livewire\Tasks\ShowTaskComponent;
 use App\Livewire\Subscriptions\SubscriptionComponent;
@@ -24,11 +25,17 @@ Route::get('/', function () {
     // return view('welcome');
 })->name('home');
 
+Route::prefix('/cronjobs')->group(function () {
+    Route::get('/send-today-notification', function () {
+        return response()->json('Notifications Scheduled', 200);
+    });
+});
+
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', DashboardComponent::class)->name('dashboard');
 
     Route::prefix('/tasks')->group(function () {
-        // Route::get('/', ViewTask::class);
+        Route::get('/', TaskComponent::class)->name('tasks');
         Route::prefix('/{task:uuid}')->group(function () {
             Route::get('/', ShowTaskComponent::class);
             Route::get('/edit', EditTaskComponent::class);
@@ -43,7 +50,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     Route::prefix('/subscriptions')->group(function () {
-        Route::get('/', SubscriptionComponent::class);
+        Route::get('/', SubscriptionComponent::class)->name('subscriptions');
         Route::prefix('/{id}')->group(function () {
             Route::get('/', ShowSubscriptionComponent::class);
         });

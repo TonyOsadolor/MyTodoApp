@@ -127,6 +127,12 @@ return [
             'path' => storage_path('logs/laravel.log'),
         ],
 
+        'ebulk_log' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/ebulk_log.log'),
+            'level' => 'info',
+        ],
+
     ],
 
 ];

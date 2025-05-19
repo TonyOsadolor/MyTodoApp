@@ -3,7 +3,7 @@
     <head>
         @include('partials.head')
     </head>
-    <body class="min-h-screen bg-white dark:bg-zinc-800">
+    <body class="min-h-screen bg-white dark:bg-zinc-800" onload="startTime()">
         <flux:header container class="border-b border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
             <flux:sidebar.toggle class="lg:hidden" icon="bars-2" inset="left" />
 
@@ -17,7 +17,25 @@
                 </flux:navbar.item>
             </flux:navbar>
 
+            <flux:navbar class="me-1.5 space-x-0.5 rtl:space-x-reverse py-0!">
+                <flux:tooltip :content="__('Tasks')" position="bottom">
+                    <flux:navbar.item icon="square-3-stack-3d" :href="route('tasks')" :current="request()->routeIs('tasks')" wire:navigate>
+                    {{ __('Tasks') }}
+                </flux:navbar.item>
+                </flux:tooltip>
+            </flux:navbar>
+
+            <flux:navbar class="-mb-px max-lg:hidden">
+                <flux:navbar.item icon="signal" :href="route('subscriptions')" :current="request()->routeIs('subscriptions')" wire:navigate>
+                    {{ __('Subscriptions') }}
+                </flux:navbar.item>
+            </flux:navbar>
+
             <flux:spacer />
+
+            <flux:navbar>
+                <flux:navbar.item icon="clock"><span id="clock"></span></flux:navbar.item>
+            </flux:navbar>
 
             <flux:navbar class="me-1.5 space-x-0.5 rtl:space-x-reverse py-0!">
                 <flux:tooltip :content="__('Notifications')" position="bottom">
@@ -146,5 +164,36 @@
 
         <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
         @fluxScripts
+        <script>
+            function startTime() {
+                const today = new Date();
+                const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+                const months = ["January", "February", "March", "April", "May", "June",
+                                "July", "August", "September", "October", "November", "December"];
+
+                let day = days[today.getDay()];
+                let date = today.getDate();
+                let month = months[today.getMonth()];
+                let year = today.getFullYear();
+
+                let h = today.getHours();
+                let m = today.getMinutes();
+                let s = today.getSeconds();
+
+                let ampm = h >= 12 ? "PM" : "AM";
+                h = h % 12 || 12; // Convert 24-hour time to 12-hour format
+
+                m = checkTime(m);
+                s = checkTime(s);
+
+                document.getElementById("clock").innerHTML = `${day} ${date}th ${month}, ${year} ${h}:${m}:${s} ${ampm}`;
+
+                setTimeout(startTime, 1000);
+            }
+
+            function checkTime(i) {
+                return i < 10 ? "0" + i : i;  // Add leading zero if needed
+            }
+        </script>
     </body>
 </html>

@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use App\Enums\SubscriptionPlanEnum;
 use Illuminate\Support\Str;
@@ -29,6 +32,15 @@ class SubscriptionPlan extends Model
     }
 
     /**
+     * Scope a query to only include active subscriptions.
+     */
+    #[Scope]
+    protected function active(Builder $query): void
+    {
+        $query->where('is_active', 1);
+    }
+
+    /**
      * Generate CODE for Category Creation
      */
     public static function generateCode($modelName)
@@ -43,5 +55,13 @@ class SubscriptionPlan extends Model
         }; 
         
         return strtoupper($complete);
+    }
+
+    /**
+     * Get the tasks for the user.
+     */
+    public function subscriptions(): HasMany
+    {
+        return $this->hasMany(Subscription::class);
     }
 }

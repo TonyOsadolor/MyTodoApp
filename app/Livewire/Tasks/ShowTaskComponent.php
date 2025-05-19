@@ -12,7 +12,6 @@ class ShowTaskComponent extends Component
     public Task $task;
 
     #[On('view-task.{task.id}')]
-    // #[On('post-updated.{post.id}')] 
     public function updateTaskView()
     {
         // $this->dispatch('view-task', $taskId);

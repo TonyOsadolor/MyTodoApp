@@ -16,6 +16,7 @@ use Livewire\WithoutUrlPagination;
 use App\Livewire\Tasks\ViewTask;
 use Illuminate\Validation\Rules;
 use Illuminate\Validation\Rule;
+use App\Services\TaskService;
 use Livewire\WithPagination;
 use Livewire\Component;
 use App\Models\Task;
@@ -135,6 +136,10 @@ class DashboardComponent extends Component
             'is_active' => true,
         ]);
 
+        if ($task->notify_me === true) {
+            $taskService = app()->make(TaskService::class)->setReminders(Auth::user(), $task);
+        }
+
         $this->reset();
         Flux::modal('add-new-task')->close();
         $msg = 'Task Added Successfully';
@@ -165,8 +170,8 @@ class DashboardComponent extends Component
             $greetings = "Good Evening...";
             $callOutColor = 'danger';
         }
-        $activeTasks = $myTasks->orderBy('created_at', 'desc')
-            ->whereNull('archive_at')->whereNull('completed_at')->take(12)->get();
+        $activeTasks = $myTasks->where('start_date', '>', now())->whereNull('archive_at')
+            ->whereNull('completed_at')->orderBy('created_at', 'desc')->take(12)->get();
         $upcomingTasks = $myTasks->whereBetween('due_date', [now(), now()->addHours(2)])
             ->whereNull('completed_at')
             ->whereNull('archive_at')->orderBy('created_at', 'desc')->take(12)->get();
@@ -180,7 +185,7 @@ class DashboardComponent extends Component
             'time' => $time,
             'activeTasks' => $activeTasks,
             'upcomingTasks' => $upcomingTasks,
-            'tableTasks' => $activeTasks,
+            'tableTasks' => Task::active()->mytasks($user)->paginate(10),
         ]);
     }
 
@@ -227,18 +232,16 @@ class DashboardComponent extends Component
                 'update_title' => [
                     'required',
                     'string',
-                    Rule::unique('tasks')->ignore(function ($query) use($task) {
-                        return $query->where('user_id', Auth::user()->id)
-                            ->whereNull('deleted_at')
-                            ->where('task_category_id', $task->task_category_id);
-                    })
+                    Rule::unique('tasks', 'title')->ignore($task->id)->where(function ($query) {
+                        return $query->where('user_id', Auth::user()->id);
+                    }),
                 ],
                 'update_description' => ['required', 'string'],
                 'update_start_date' => ['required', 'date', 'date_format:Y-m-d'],
-                'update_start_time' => ['required_if:update_all_day,false', 'date_format:H:i'],                
+                'update_start_time' => ['required_if:update_all_day,false'],                
                 'update_all_day' => ['nullable', 'boolean'],
-                'update_due_date' => [ 'date', 'date_format:Y-m-d'],
-                'update_due_time' => ['required_with:end_date', 'date_format:H:i'],
+                'update_due_date' => ['required_if:update_all_day,false', 'date_format:Y-m-d'],
+                'update_due_time' => ['required_with:end_date'],
             ],
             [
                 'update_title.required' => 'Title is Required',
@@ -277,6 +280,8 @@ class DashboardComponent extends Component
             'is_active' => true,
         ]);
 
+        $taskService = app()->make(TaskService::class)->setReminders(Auth::user(), $task);
+
         $this->reset();
         $this->closeModal("editTask-".$task->id);
         $msg = $task->title ." Updated!!";
@@ -294,7 +299,6 @@ class DashboardComponent extends Component
         $task->update([
             'completed_at' => now(),
             'completed_by' => $user->id,
-            // 'is_active' => $user->id,
         ]);
 
         $this->closeModal("markDone-".$task->id);

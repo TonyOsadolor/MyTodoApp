@@ -51,7 +51,7 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @var array
      */
-    protected $appends = ['full_name', 'is_verified'];
+    protected $appends = ['full_name', 'is_verified', 'text_number'];
 
     /**
      * Get the full name of the user.
@@ -61,6 +61,22 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getFullNameAttribute()
     {
         return $this->first_name . ' ' . $this->last_name;
+    }
+
+    /**
+     * Get formatted phone number for texting user.
+     *
+     * @return string
+     */
+    public function getTextNumberAttribute()
+    {
+        if (empty($this->phone)) {
+            return null;
+        }
+
+        $phone = preg_replace('/[^0-9]/', '', $this->phone);
+
+        return str_starts_with($phone, '0') ? '234' . substr($phone, 1) : (str_starts_with($phone, '234') ? $phone : '234' . $phone);
     }
 
     /**
