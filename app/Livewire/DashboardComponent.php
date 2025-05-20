@@ -185,7 +185,7 @@ class DashboardComponent extends Component
             'time' => $time,
             'activeTasks' => $activeTasks,
             'upcomingTasks' => $upcomingTasks,
-            'tableTasks' => Task::active()->mytasks($user)->paginate(10),
+            'tableTasks' => Task::active()->mytasks($user)->orderBy('created_at', 'desc')->paginate(10),
         ]);
     }
 

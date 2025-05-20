@@ -5,7 +5,7 @@
         <div>
             <!-- Greetings Banner Starts -->
             <flux:callout icon="clock" color="lime" inline>
-                <flux:callout.text id="clock"></flux:callout.text>
+                <flux:callout.text ><span id="clock">Live Time</span></flux:callout.text>
             </flux:callout>
             <!-- Greetings Banner End -->
 
@@ -236,8 +236,8 @@
                         <hr style="margin: 8px auto!important; border: 0px transparent;">
                         <div class="grid grid-cols-1 gap-2 p-2">
                             <div>
-                                <span class="bg-green-500 text-gray-100 text-md font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-green-600 dark:text-gray-100">
-                                    Start By: <span>{{ \Carbon\Carbon::parse(optional($task)->start_date)->format('F j, Y g:i A') ?? 'No date available' }}</span>
+                                <span class="bg-green-500 text-gray-100 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-green-600 dark:text-gray-100">
+                                    Starts By: <span>{{ \Carbon\Carbon::parse(optional($task)->start_date)->format('F j, Y g:i A') ?? 'No date available' }}</span>
                                 </span>
                             </div>
                             @isset($task->due_date)
@@ -252,7 +252,7 @@
                                     class="text-center tracking-normal font-semibold font-stretch-normal font-serif  p-px m-auto">
                                     Countdown Timer: <span>HERE</span>
                                 </flux:text> --}}
-                                <span class="bg-{{$themeColor}}-400 {{$addClass}} text-gray-{{$textColor}} text-md font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-{{$themeColor}}-500 dark:text-gray-{{$textColor}}">
+                                <span class="bg-{{$themeColor}}-400 {{$addClass}} text-gray-{{$textColor}} text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-{{$themeColor}}-500 dark:text-gray-{{$textColor}}">
                                     
                                     Due Date: 
                                     {{ \Carbon\Carbon::parse(optional($task)->due_date)->format('F j, Y g:i A') ?? 'No date available' }}
