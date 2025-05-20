@@ -14,6 +14,18 @@
             <flux:navlist variant="outline">
                 <flux:navlist.group :heading="__('Platform')" class="grid">
                     <flux:navlist.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>{{ __('Dashboard') }}</flux:navlist.item>
+
+                    <flux:navlist.item icon="square-3-stack-3d" :href="route('tasks')" :current="request()->routeIs('tasks')" wire:navigate>
+                        {{ __('Tasks') }}
+                    </flux:navlist.item>
+
+                    <flux:navlist.item icon="signal" :href="route('subscriptions')" :current="request()->routeIs('subscriptions')" wire:navigate>
+                        {{ __('Subscriptions') }}
+                    </flux:navlist.item>
+
+                    <flux:navlist.item icon="bell" :href="route('notifications')" :current="request()->routeIs('notifications')" wire:navigate>
+                        {{ __('Notifications') }}
+                    </flux:navlist.item>
                 </flux:navlist.group>
             </flux:navlist>
 
@@ -30,11 +42,32 @@
             </flux:navlist> --}}
 
             <!-- Desktop User Menu -->
+            <flux:dropdown>
+                <flux:navbar.item 
+                     wire:poll.15s 
+                    badge="{{auth()->user()->unreadNotifications->count()}}" 
+                    class="max-lg:hidden [&>div>svg]:size-5"
+                    badge-color="yellow">                           
+                    <flux:icon.bell-alert variant="solid" class="{{ auth()->user()->unreadNotifications->count() > 0 ? 'text-amber-500 dark:text-amber-300' : null}}" />                        
+                </flux:navbar.item>
+                <flux:navmenu>
+                    @foreach (auth()->user()->unreadNotifications->take(5) as $notification)
+                    <flux:navmenu.item href="/notifications/{{$notification->id}}" style="max-width: 300px!important;">
+                        <div class="p-4 mb-4 text-sm text-gray-100 rounded-lg bg-green-600 dark:bg-green-800 dark:text-gray-200" role="alert">
+                            <span class="font-medium">{{ $notification['data']['title'] }}</span> 
+                        </div>                              
+                    </flux:navmenu.item>                               
+                    @endforeach                            
+                    <flux:navmenu.item href="/notifications">View All</flux:navmenu.item>
+                </flux:navmenu>
+            </flux:dropdown>
+
             <flux:dropdown position="bottom" align="start">
                 <flux:profile
-                    :name="auth()->user()->name"
+                    :name="auth()->user()->first_name"
                     :initials="auth()->user()->initials()"
                     icon-trailing="chevrons-up-down"
+                    avatar="https://unavatar.io/x/calebporzio"
                 />
 
                 <flux:menu class="w-[220px]">
@@ -82,9 +115,35 @@
             <flux:spacer />
 
             <flux:dropdown position="top" align="end">
+                <flux:navbar.item 
+                    wire:poll.15s 
+                    badge="{{auth()->user()->unreadNotifications->count()}}"
+                    badge-color="yellow">                           
+                    <flux:icon.bell-alert variant="solid" class="{{ auth()->user()->unreadNotifications->count() > 0 ? 'text-amber-500 dark:text-amber-300' : null}}" />                        
+                </flux:navbar.item>
+
+                <flux:navmenu>
+                    @foreach (auth()->user()->unreadNotifications->take(5) as $notification)
+                    <flux:navmenu.item href="/notifications/{{$notification->id}}" style="max-width: 300px!important;">
+                        <div class="p-4 mb-4 text-sm text-gray-100 rounded-lg bg-green-600 dark:bg-green-800 dark:text-gray-200" role="alert">
+                            <span class="font-medium">{{ $notification['data']['title'] }}</span> 
+                            <hr style="margin:5px auto!important; border:1px solid whitesmoke!important;">
+                            <span class="truncate text-xs dark:text-yellow-400">
+                                {{ $notification->created_at->format('Y-m-d D H : i : s A') }}
+                            </span> 
+                        </div>                         
+                    </flux:navmenu.item>                               
+                    @endforeach                            
+                    <flux:navmenu.item href="/notifications">View All</flux:navmenu.item>
+                </flux:navmenu>
+            </flux:dropdown>
+
+            <flux:dropdown position="top" align="end">
                 <flux:profile
+                    {{-- :name="auth()->user()->first_name" --}}
                     :initials="auth()->user()->initials()"
                     icon-trailing="chevron-down"
+                    avatar="https://unavatar.io/x/calebporzio"
                 />
 
                 <flux:menu>
@@ -100,7 +159,7 @@
                                 </span>
 
                                 <div class="grid flex-1 text-start text-sm leading-tight">
-                                    <span class="truncate font-semibold">{{ auth()->user()->name }}</span>
+                                    <span class="truncate font-semibold">{{ auth()->user()->full_name }}</span>
                                     <span class="truncate text-xs">{{ auth()->user()->email }}</span>
                                 </div>
                             </div>

@@ -170,8 +170,8 @@ class DashboardComponent extends Component
             $greetings = "Good Evening...";
             $callOutColor = 'danger';
         }
-        $activeTasks = $myTasks->where('start_date', '>', now())->whereNull('archive_at')
-            ->whereNull('completed_at')->orderBy('created_at', 'desc')->take(12)->get();
+        $activeTasks = $myTasks->whereNull('archive_at')->whereNull('completed_at')
+            ->orderBy('created_at', 'desc')->take(12)->get();
         $upcomingTasks = $myTasks->whereBetween('due_date', [now(), now()->addHours(2)])
             ->whereNull('completed_at')
             ->whereNull('archive_at')->orderBy('created_at', 'desc')->take(12)->get();
@@ -300,6 +300,8 @@ class DashboardComponent extends Component
             'completed_at' => now(),
             'completed_by' => $user->id,
         ]);
+
+        $taskService = app()->make(TaskService::class)->unsetReminders(Auth::user(), $task);
 
         $this->closeModal("markDone-".$task->id);
         $msg = $task->title ." Completed!!";

@@ -43,7 +43,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     Route::prefix('/notifications')->group(function () {
-        Route::get('/', NotificationComponent::class);
+        Route::get('/', NotificationComponent::class)->name('notifications');
         Route::prefix('/{id}')->group(function () {
             Route::get('/', ShowNotificationComponent::class);
         });

@@ -4,7 +4,7 @@
 Reminder for your <b><i>{{$task->category->name}}</i> - {{$task->title}}</b> <br>
 <p style="text-align:justify;color:black;">
     Quick one Dear, don't forget you have {{ $task->category->id === 1 ? 'An Event' : 'A Task' }} 
-    that is coming up {{$time}} from now. Find the {{ $task->category->id === 1 ? 'Event' : 'Task' }} 
+    that is coming up {{$time}} minutes from now. Find the {{ $task->category->id === 1 ? 'Event' : 'Task' }} 
     details below:
 </p>
 

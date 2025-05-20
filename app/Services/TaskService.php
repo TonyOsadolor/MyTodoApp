@@ -6,8 +6,8 @@ use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Task;
 use App\Models\TaskReminder;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Database\Eloquent\Collection;
 
 class TaskService
 {
@@ -53,5 +53,18 @@ class TaskService
                 );
             }
         }
+    }
+
+    /**
+     * Unset Task Reminders
+     */
+    public function unsetReminders(User $user, Task $task): void
+    {
+        if (!$user || !$task) {
+            Log::error('Model not found: ' . ($user ?: $task));
+            return;
+        }
+
+        TaskReminder::where('user_id', $user->id)->where('task_id', $task->id)->delete();
     }
 }

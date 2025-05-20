@@ -64,4 +64,4 @@ Schedule::call(function () {
  * Run to Send All Pending Jobs
  */
 Schedule::command('queue:work --stop-when-empty')
-    ->everyMinute()->withoutOverlapping()->runInBackground();
+    ->everyMinute()->withoutOverlapping();
