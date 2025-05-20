@@ -28,6 +28,12 @@
         />
 
         <!-- Phone Number -->
+            <flux:input
+                wire:model="phone" :label="__('Phone Number')" type="tel" autocomplete="off"
+                :placeholder="__('+2349038472639')"
+            />
+
+        <!-- Phone Number -->
         {{-- <flux:input.group>
             <flux:select>
                 <flux:select.option selected>+234</flux:select.option>

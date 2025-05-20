@@ -26,6 +26,8 @@ class Register extends Component
 
     public string $email = '';
 
+    public string $phone = '';
+
     public string $username = '';
 
     public string $password = '';
@@ -41,6 +43,7 @@ class Register extends Component
             [
                 'first_name' => ['required', 'string', 'max:255'],
                 'last_name' => ['required', 'string', 'max:255'],
+                'phone' => ['required', 'numeric', 'max:90', 'unique:'.User::class],
                 'email' => ['required', 'string', 'lowercase', 'email', 'max:90', 'unique:'.User::class],
                 'username' => ['required', 'string', 'regex:/^[a-zA-Z0-9_]+$/', 'max:30', 'unique:'.User::class],
                 'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
@@ -53,6 +56,11 @@ class Register extends Component
                 'last_name.required' => ':attribute is required',                
                 'last_name.string' => ':attribute must be a string',                
                 'last_name.max' => ':attribute cannot be greater than 255 characters',
+
+                'phone.required' => ':attribute is required',
+                'phone.numeric' => ':attribute format is not valid',
+                'phone.max' => ':attribute too long',
+                'phone.unique' => ':attribute already taken',
 
                 'email.required' => ':attribute is required',
                 'email.email' => 'Invalid :attribute supplied',
