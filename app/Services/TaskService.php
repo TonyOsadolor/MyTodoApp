@@ -41,14 +41,14 @@ class TaskService
         $reminderTimes = [30, 15, 0];
 
         foreach ($reminderTimes as $time) {
-            $reminderTime = $task->start_date->subMinutes($time);
+            $reminderTime = $task->start_date->copy()->subMinutes($time);
 
             if ($reminderTime->greaterThan($currentTime)) {
                 TaskReminder::updateOrCreate(
                     [
                         'user_id' => $user->id,
                         'task_id' => $task->id,
-                        'reminder_time' => $task->start_date->subMinutes($time),
+                        'reminder_time' => $reminderTime,
                     ],
                 );
             }

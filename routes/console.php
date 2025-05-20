@@ -35,7 +35,8 @@ Schedule::call(function () {
 Schedule::call(function () {
 
     $reminders = TaskReminder::where('sent', false)
-        ->whereBetween('reminder_time', [Carbon::now(), Carbon::now()->addMinutes(30)])
+        // ->whereBetween('reminder_time', [Carbon::now(), Carbon::now()->addMinutes(30)])
+        ->where('reminder_time', '<=', Carbon::now())
         ->get();
 
     if ($reminders->isEmpty()) {
