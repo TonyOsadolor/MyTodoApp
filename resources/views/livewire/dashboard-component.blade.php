@@ -4,8 +4,8 @@
         
         <div>
             <!-- Greetings Banner Starts -->
-            <flux:callout icon="clock" color="lime" inline>
-                <flux:callout.text ><span id="clock">Live Time</span></flux:callout.text>
+            <flux:callout icon="clock" color="lime" inline hidden>
+                <flux:callout.text><span id="liveClock">Live Time</span></flux:callout.text>
             </flux:callout>
             <!-- Greetings Banner End -->
 
@@ -564,7 +564,7 @@
                 m = checkTime(m);
                 s = checkTime(s);
 
-                document.getElementById("clock").innerHTML = `${day} ${date}th ${month}, ${year} ${h}:${m}:${s} ${ampm}`;
+                document.getElementById("liveClock").innerHTML = `${day} ${date}th ${month}, ${year} ${h}:${m}:${s} ${ampm}`;
 
                 setTimeout(startTime, 1000);
             }
