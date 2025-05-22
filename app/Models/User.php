@@ -8,13 +8,14 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
+use App\Jobs\WelcomeUserJob;
 use Illuminate\Support\Str;
 use App\Traits\UUID;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, SoftDeletes, UUID;
+    use HasFactory, Notifiable, SoftDeletes;
 
     /**
      * The attributes that are not mass assignable.
@@ -22,6 +23,24 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var list<string>
      */
     protected $guarded = ['id'];
+
+    /**
+     * Boot for Creation
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->uuid = Str::uuid();
+        });
+
+        static::updating(function ($model) {
+            if ($model->isDirty('email_verified_at')) {
+                WelcomeUserJob::dispatch($model);
+            }
+        });
+    }
 
     /**
      * The attributes that should be hidden for serialization.

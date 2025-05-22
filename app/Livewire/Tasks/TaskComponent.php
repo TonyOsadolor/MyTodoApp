@@ -2,15 +2,18 @@
 
 namespace App\Livewire\Tasks;
 
+use App\Traits\AppNotificationTrait;
 use Illuminate\Support\Facades\Auth;
+use App\Enums\AppNotificationEnum;
+use Illuminate\Http\Request;
 use Livewire\WithPagination;
 use Livewire\Component;
 use App\Models\Task;
-use Illuminate\Http\Request;
 
 class TaskComponent extends Component
 {
     use WithPagination;
+    use AppNotificationTrait;
 
     public $archived = false;
 
@@ -20,9 +23,34 @@ class TaskComponent extends Component
         $this->archived = isset($validated['archived']) ? $validated['archived'] : false;
     }
 
+    /**
+     * Open Archived Tasks
+     */
     public function openArchivedTask()
     {
         return redirect("/tasks?archived=true");
+    }
+
+    /**
+     * Unarchive Tasks
+     */
+    public function unarchiveTask($taskId)
+    {
+        $task = Task::where('id', $taskId)->where('user_id', Auth::user()->id)->first();
+
+        if (!$task) {
+            $msg = 'Sorry, Task Not Found';
+            $this->notify('error', $msg, AppNotificationEnum::ERROR);
+            return;
+        }
+
+        $task->update([
+            'archive_at' => null,
+            'is_active' => true,
+        ]);
+
+        $msg = $task->title." Unarchived!!";
+        $this->notify('success', $msg, AppNotificationEnum::SUCCESS);
     }
 
     public function render()

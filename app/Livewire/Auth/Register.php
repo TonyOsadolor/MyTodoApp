@@ -43,7 +43,7 @@ class Register extends Component
             [
                 'first_name' => ['required', 'string', 'max:255'],
                 'last_name' => ['required', 'string', 'max:255'],
-                'phone' => ['required', 'numeric', 'max:90', 'unique:'.User::class],
+                'phone' => ['required', 'numeric', 'unique:'.User::class],
                 'email' => ['required', 'string', 'lowercase', 'email', 'max:90', 'unique:'.User::class],
                 'username' => ['required', 'string', 'regex:/^[a-zA-Z0-9_]+$/', 'max:30', 'unique:'.User::class],
                 'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],

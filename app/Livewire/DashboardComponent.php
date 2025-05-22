@@ -326,6 +326,8 @@ class DashboardComponent extends Component
 
         $task->delete();
 
+        $taskService = app()->make(TaskService::class)->unsetReminders(Auth::user(), $task);
+
         $this->closeModal("deleteTask-".$task->id);
         $msg = "Task Deleted!!";
         $this->notify('success', $msg, AppNotificationEnum::SUCCESS);

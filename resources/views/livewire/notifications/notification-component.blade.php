@@ -1,4 +1,9 @@
 <div>
+    <flux:navbar>
+        <flux:navbar.item icon="envelope-open" wire:click="markAllAsRead()" wire:loading.class="opacity-50" wire:confirm="Are you sure you want to Mark all as Read?">Mark All as Read</flux:navbar.item>
+        <flux:navbar.item icon="trash" wire:click="deleteAllRead()" wire:loading.class="opacity-50" wire:confirm="Are you sure you want to delete these Notifications?">Delete All Read</flux:navbar.item>
+    </flux:navbar>
+
     @if(count($notifications) > 0)
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -23,7 +28,7 @@
             <tbody>
                 <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                        {{ $sn }} @if(!$notification->read_at)<x-heroicon-o-sun class="text-yellow-400" /> @endif
+                        {{ $sn }} @if(!$notification->read_at)<x-heroicon-o-envelope class="text-yellow-400" /> @endif
                     </th>
                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                         {{ $notification['data']['title'] }}
@@ -39,6 +44,7 @@
             <?php $sn++; ?>
             @endforeach
         </table>
+        {{ $notifications->links(data: ['scrollTo' => false]) }}
     </div>
     @else
     <div id="toast-success" class="flex items-center w-full p-4 mb-4 text-gray-500 bg-white rounded-lg shadow-sm dark:text-gray-400 dark:bg-gray-800" role="alert">

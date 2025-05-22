@@ -24,7 +24,10 @@
                     </flux:navlist.item>
 
                     <flux:navlist.item icon="bell" :href="route('notifications')" :current="request()->routeIs('notifications')" wire:navigate>
-                        {{ __('Notifications') }}
+                        {{ __('Notifications') }} 
+                        @if(Auth::user()->unreadNotifications->count() > 0)
+                            <span class="text-yellow-400 dark:text-yellow-600">[{{ Auth::user()->unreadNotifications->count() }}]</span>
+                        @endif
                     </flux:navlist.item>
                 </flux:navlist.group>
             </flux:navlist>

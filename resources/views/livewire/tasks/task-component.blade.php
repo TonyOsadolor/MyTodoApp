@@ -36,7 +36,7 @@
             </thead>
             <?php $sn = 1; ?>
             @foreach($tasks as $task)
-            <tbody>
+            <tbody wire:key="{{$task->uuid}}">
                 <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                         {{ $sn }}
@@ -59,8 +59,12 @@
                     <td class="px-6 py-4">
                         {{ \Carbon\Carbon::parse(optional($task)->created_at)->format('F j, Y g:i A') ?? 'No date available' }}
                     </td>
-                    <td class="px-6 py-4">
-                        <a href="/tasks/{{$task->uuid}}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">View</a>
+                    <td class="px-6 py-4" style="text-align:center!important;">
+                        <a href="/tasks/{{$task->uuid}}" class="font-medium text-gray-200 dark:text-gray-100 hover:underline">View</a>
+                        @if($task->archive_at)
+                            <hr style="margin: 1px auto!important; border: 0px transparent;">
+                            <a href="#" wire:click="unarchiveTask({{$task->id}})" class="font-medium text-green-400 dark:text-green-500 hover:underline">Unarchive</a>
+                        @endif
                     </td>
                 </tr>
             </tbody>
