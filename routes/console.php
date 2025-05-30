@@ -44,7 +44,7 @@ Schedule::call(function () {
     }
 
     $reminders->each(function ($reminder) {
-        $task = Task::where('id', $reminder->task_id)->where('notify_me', true)->first();
+        $task = Task::where('id', $reminder->task_id)->active()->where('notify_me', true)->first();
 
         if (!$task) {
             return;
