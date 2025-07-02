@@ -81,7 +81,7 @@
             <flux:dropdown position="top" align="end">
                 {{-- <flux:profile class="cursor-pointer" :initials="auth()->user()->initials()" /> --}}
                 <flux:profile circle
-                    name="{{ auth()->user()->first_name }}" avatar="https://unavatar.io/x/calebporzio" />
+                    name="{{ auth()->user()->first_name }}" avatar="{{ auth()->user()->photo }}" />
 
                 <flux:menu>
                     <flux:menu.radio.group>
