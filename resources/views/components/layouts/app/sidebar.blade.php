@@ -70,7 +70,7 @@
                     :name="auth()->user()->first_name"
                     :initials="auth()->user()->initials()"
                     icon-trailing="chevrons-up-down"
-                    avatar="https://unavatar.io/x/calebporzio"
+                    avatar="{{ auth()->user()->photo }}"
                 />
 
                 <flux:menu class="w-[220px]">
@@ -146,7 +146,7 @@
                     {{-- :name="auth()->user()->first_name" --}}
                     :initials="auth()->user()->initials()"
                     icon-trailing="chevron-down"
-                    avatar="https://unavatar.io/x/calebporzio"
+                    avatar="{{ auth()->user()->photo }}"
                 />
 
                 <flux:menu>

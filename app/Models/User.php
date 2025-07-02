@@ -105,7 +105,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getPhotoAttribute($value)
     {
-        return $value ? $value : 'https://unavatar.io/x/calebporzio';
+        return $value ? $value : config('mytodoapp.default_avatar');
     }
 
     /**

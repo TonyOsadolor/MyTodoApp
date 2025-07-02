@@ -82,6 +82,7 @@
             </div>
         </form>
 
+        <livewire:settings.change-user-avatar />
         <livewire:settings.delete-user-form />
     </x-settings.layout>
 </section>
